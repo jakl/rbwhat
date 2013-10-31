@@ -5,20 +5,24 @@ querystring = require 'querystring'
 node_rest_client = require 'node-rest-client'
 fs = require 'fs'
 
-client_args = JSON.parse fs.readFileSync(process.argv[2]).toString()
-client = new node_rest_client.Client(client_args)
+config_file = process.argv[2]
+config_file or= process.env.HOME + '/.rbwhat.json'
 
-login_user = client_args.user
-rb = 'https://reviewboard.twitter.biz/'
+config = JSON.parse fs.readFileSync(config_file).toString()
+client = new node_rest_client.Client
+  user: config.user
+  password: config.password
+
+login_user = config.user
+rb = config.url
 
 rbcall = (path, args, cb)->
   query = '?' + querystring.stringify args
   client.get rb + path + query, (res)->
     cb JSON.parse(res)
 
-args =
-  'status': 'pending'
-  'to-groups': 'intl-eng'
+args = 'status': 'pending'
+if config.group then args['to-groups'] = config.group
 
 rbcall 'api/review-requests/', args, (res)->
   res.review_requests.forEach eachReviewRequest

@@ -19,6 +19,8 @@ Run
 config.json
 -----------
 {
-  "user": "jkoval",
-  "password": "asdfasdfasdf"
+  "user": "your-reviewboard-name",
+  "password": "asdfasdf",
+  "url": "reviewboard.organization.com",
+  "group": "optional-reviewboard-group-filter"
 }
