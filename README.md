@@ -15,6 +15,8 @@ Run
 
 ./rbwhat.coffee config.json
 
+default config can be in ~/.rbwhat.json
+
 
 config.json
 -----------
