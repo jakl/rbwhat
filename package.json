@@ -1,14 +1,13 @@
 {
   "name": "rbwhat",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Quickly list review requests you need to respond to",
   "license": "MIT",
   "author": "@jakl",
   "preferGlobal": true,
-  "bin": "./rbwhat.coffee",
+  "bin": "./rbwhat.js",
   "dependencies": {
     "node-rest-client": "",
-    "colors": "",
-    "coffee-script": ""
+    "colors": ""
   }
 }
