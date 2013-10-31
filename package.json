@@ -2,6 +2,10 @@
   "name": "twreviewboarddash",
   "version": "1.0.0",
   "description": "Quickly list review requests you need to respond to",
+  "license": "MIT",
+  "author": "@jakl",
+  "preferGlobal": true,
+  "bin": "./rbwhat",
   "dependencies": {
     "node-rest-client": "",
     "colors": ""
