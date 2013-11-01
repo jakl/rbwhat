@@ -7,8 +7,9 @@ Quickly list review requests that you need to respond to
 Install
 -------
 
-npm install
-create ~/.rbwhat.json
+npm install -g jakl/rbwhat
+
+Make your ~/.rbwhat.json
 
 
 Run
