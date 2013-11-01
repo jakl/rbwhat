@@ -7,15 +7,11 @@ Quickly list review requests that you need to respond to
 Install
 -------
 
-npm install -g jakl/rbwhat
+`npm install -g jakl/rbwhat`
 
 Make your ~/.rbwhat.json
 
-
-Run
----
-
-./rbwhat.coffee
+Run `rbwhat`
 
 
 ~/.rbwhat.json
