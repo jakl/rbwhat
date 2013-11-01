@@ -8,17 +8,16 @@ Install
 -------
 
 npm install
+create ~/.rbwhat.json
 
 
 Run
 ---
 
-./rbwhat.coffee config.json
-
-default config can be in ~/.rbwhat.json
+./rbwhat.coffee
 
 
-config.json
+~/.rbwhat.json
 -----------
 {
   "user": "your-reviewboard-name",
