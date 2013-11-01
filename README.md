@@ -19,9 +19,12 @@ Run
 
 ~/.rbwhat.json
 -----------
+
+```javascript
 {
   "user": "your-reviewboard-name",
   "password": "asdfasdf",
   "url": "reviewboard.organization.com",
   "group": "optional-reviewboard-group-filter"
 }
+```
