@@ -8,7 +8,11 @@ Install
 -------
 
 npm install
+
 create ~/.rbwhat.json
+
+
+Make sure [nodejs](http://nodejs.org) is up to date
 
 
 Run
@@ -21,7 +25,8 @@ Run
 -----------
 {
   "user": "your-reviewboard-name",
-  "password": "asdfasdf",
-  "url": "reviewboard.organization.com",
+  "url": "https://reviewboard.twitter.biz/",
+
+  "password": "optional-password",
   "group": "optional-reviewboard-group-filter"
 }
