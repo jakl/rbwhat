@@ -47,7 +47,10 @@ eachReviewRequest = (request)->
       reviewer = review.links.user.title
       shipit = review.ship_it
 
-      output.push '    ' + if reviewer is submitter
+      output.push '    ' +
+        if reviewer is login_user
+          reviewer.cyan
+        else if reviewer is submitter
           reviewer.magenta
         else if shipit
           reviewer.green
@@ -58,5 +61,7 @@ eachReviewRequest = (request)->
         needs_review = false # if you were last to review then done!
       else if reviewer is submitter
         needs_review = true # if code was updated, do another review
+      else if submitter is login_user
+        needs_review = true # if someone reviewed your code
 
     if needs_review then console.log output.join('\n')

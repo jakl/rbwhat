@@ -16,6 +16,30 @@ Create your config in ~/.rbwhat.json
 Run `rbwhat`
 
 
+Output Explained
+----------------
+
+Output starts with the submitter's name
+
+It is blue for yourself and purple otherwise
+
+Following is the review name and a link to the review
+
+Next is each review, appropriately color coded
+
+`Green:Shipit  Red:NoShipit  Blue:Yourself  Purple:Submitter`
+
+```
+jkoval: make all phrases really pop
+  https://reviewboard.twitter.biz/r/234013/diff
+    bob
+    bob
+    jkoval
+    bob
+    bill
+```
+
+
 ~/.rbwhat.json
 -----------
 

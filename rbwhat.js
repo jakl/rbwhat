@@ -63,10 +63,12 @@
         review = _ref[_i];
         reviewer = review.links.user.title;
         shipit = review.ship_it;
-        output.push('    ' + (reviewer === submitter ? reviewer.magenta : shipit ? reviewer.green : reviewer.red));
+        output.push('    ' + (reviewer === login_user ? reviewer.cyan : reviewer === submitter ? reviewer.magenta : shipit ? reviewer.green : reviewer.red));
         if (login_user === reviewer) {
           needs_review = false;
         } else if (reviewer === submitter) {
+          needs_review = true;
+        } else if (submitter === login_user) {
           needs_review = true;
         }
       }
