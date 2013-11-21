@@ -1,67 +1,74 @@
 #!/usr/bin/env coffee
-colors = require 'colors'
-util = require 'util'
-querystring = require 'querystring'
-node_rest_client = require 'node-rest-client'
+require 'colors' # adds color methods on strings
+querystringify = (require 'querystring').stringify # hash to http query
+client = new (require 'node-rest-client').Client()
 fs = require 'fs'
+config = user: 'test', url: 'https://reviewboard.twitter.biz/', group: 'intl-eng-test'
 
-config_file = process.argv[2]
-config_file or= process.env.HOME + '/.rbwhat.json'
+# Peruse review requests, printing active ones
+main = ->
+  loadConfigOrDefault()
+  filter = status: 'pending', 'to-groups': config.group
+  rbapi 'api/review-requests/', filter, (res)->
+    res.review_requests.forEach printActiveRequest
 
-config = JSON.parse fs.readFileSync(config_file).toString()
-client = new node_rest_client.Client
-  user: config.user
-  password: config.password
+# Write template of config file if one doesn't exist
+loadConfigOrDefault = ->
+  config_path = process.env.HOME + '/.rbwhat.json'
+  if fs.existsSync config_path
+    config = JSON.parse fs.readFileSync(config_path).toString()
+  else
+    fs.writeFileSync config_path, JSON.stringify(config, null, 2)
 
-login_user = config.user
-rb = config.url
+  if config.user is 'test' then console.log 'Set options in ~/.rbwhat.json'
 
-rbcall = (path, args, cb)->
-  query = '?' + querystring.stringify args
-  client.get rb + path + query, (res)->
+# Calls rb api with a hash of query params. Returns response as hash
+rbapi = (path, args, cb)->
+  query = '?' + querystringify args
+  client.get config.url + path + query, (res)->
     cb JSON.parse(res)
 
-args = 'status': 'pending'
-if config.group then args['to-groups'] = config.group
-
-rbcall 'api/review-requests/', args, (res)->
-  res.review_requests.forEach eachReviewRequest
-
-eachReviewRequest = (request)->
+# Print each review request that needs attention
+printActiveRequest = (request)->
   submitter = request.links.submitter.title
 
-  rbcall "api/review-requests/#{request.id}/reviews/", null, (res)->
-    output = []
-    colored_submitter = if submitter is login_user
-      submitter.cyan
-    else
-      submitter.magenta
-
-    output.push colored_submitter + ': ' + request.summary.yellow
-    output.push '  ' + "#{rb}r/#{request.id}/diff".underline
-
-    # By default coworker review boards need your attention
-    needs_review = if login_user is submitter then false else true
+  rbapi "api/review-requests/#{request.id}/reviews/", null, (res)->
+    needs_review = config.user isnt submitter # only review others'
+    output = formatHeading(submitter, request) # begin output array with heading
 
     for review in res.reviews
       reviewer = review.links.user.title
-      shipit = review.ship_it
-
-      output.push '    ' +
-        if reviewer is login_user
-          reviewer.cyan
-        else if reviewer is submitter
-          reviewer.magenta
-        else if shipit
-          reviewer.green
-        else
-          reviewer.red
-
-      if login_user is reviewer
-        needs_review = false # if you were last to review then done!
-      else if reviewer is submitter
-        needs_review = true # if code was updated, do another review
-      else if submitter is login_user
-        needs_review = true # if someone reviewed your code
+      output.push '    ' + colorName(reviewer, submitter, review.ship_it)
+      needs_review = needsReview(reviewer, submitter, needs_review)
 
     if needs_review then console.log output.join('\n')
+
+# Review submitter, name, and url heading, as array of lines for output
+formatHeading = (submitter, request)->
+  url = "#{config.url}r/#{request.id}/diff"
+  [
+    "#{colorName(submitter, submitter)}: #{request.summary.yellow}"
+    "  #{url.underline}"
+  ]
+
+# Rules for coloring a reviewer's name
+colorName = (name, submitter, shipit)->
+  switch name
+    when config.user then name.cyan
+    when submitter then name.magenta
+    else
+      if shipit then name.green else name.red
+
+# Rules for marking a review board as needing attention
+#   called on each review chronologically
+needsReview = (reviewer, submitter, needs_review)->
+  # if you were last to review then done! (code update / comment / shipit)
+  if config.user is reviewer then false
+  # code updates are reviews that need your attention
+  else if reviewer is submitter then true
+  # if someone reviewed your fresh code, check it out
+  else if submitter is config.user then true
+  # if someone else gives a review, ignore it until there's a response
+  else needs_review
+
+main()

@@ -1,6 +1,5 @@
 {
-  "user": "jkoval",
-  "password": "asdfasdf",
+  "user": "test",
   "url": "https://reviewboard.twitter.biz/",
-  "group": "intl-eng"
+  "group": "intl-eng-test"
 }

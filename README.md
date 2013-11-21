@@ -11,44 +11,23 @@ Make sure [nodejs](http://nodejs.org) is up to date
 
 `npm install -g jakl/rbwhat`
 
-Create your config in ~/.rbwhat.json
-
 Run `rbwhat`
+
+Edit your config in ~/.rbwhat.json
 
 
 Output Explained
 ----------------
 
-Output starts with the submitter's name
+Output starts with the submitter's name. It is blue for yourself and purple otherwise
 
-It is blue for yourself and purple otherwise
+The review name & link are next, followed by each review chronologically
 
-Following is the review name and a link to the review
-
-Next is each review, appropriately color coded
-
-`Green:Shipit  Red:NoShipit  Blue:Yourself  Purple:Submitter`
+Reviews are color coded:
 
 ```
-jkoval: make all phrases really pop
-  https://reviewboard.twitter.biz/r/234013/diff
-    bob
-    bob
-    jkoval
-    bob
-    bill
-```
-
-
-~/.rbwhat.json
------------
-
-```javascript
-{
-  "user": "your-reviewboard-name",
-  "url": "https://reviewboard.twitter.biz/",
-
-  "password": "optional-password",
-  "group": "optional-reviewboard-group-filter"
-}
+Green:  Shipit
+Red:    Don't Shipit
+Blue:   Yourself
+Purple: Submitter
 ```
