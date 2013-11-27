@@ -32,6 +32,6 @@ Blue:   Yourself
 Purple: Submitter
 ```
 
-Coworker reviews are shown if you havn't responded to the latest update or there's a blocking comment.
+Coworker reviews are shown if you havn't responded to the latest update.
 
-Your reviews are shown if they aren't submitted but have responses.
+Your unsubmitted reviews are shown if they have responses.
