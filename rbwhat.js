@@ -15,7 +15,8 @@
   config = {
     user: 'test',
     url: 'https://reviewboard.twitter.biz/',
-    group: 'intl-eng-test'
+    group: 'intl-eng-test',
+    daysOld: 14
   };
 
   main = function() {
@@ -35,6 +36,10 @@
     config_path = process.env.HOME + '/.rbwhat.json';
     if (fs.existsSync(config_path)) {
       config = JSON.parse(fs.readFileSync(config_path).toString());
+      if (!config.daysOld) {
+        config.dasyOld = 14;
+        console.log('To turn off this message, \nplease add to the middle of ~/rbwhat.json this line \n    "daysOld": 14, \nThis will limit reviews to a certain age in days. \nDefaulting to 14 now...');
+      }
     } else {
       fs.writeFileSync(config_path, JSON.stringify(config, null, 2));
     }
@@ -63,7 +68,7 @@
         review = _ref[_i];
         date = new Date(review.timestamp);
         reviewer = review.links.user.title;
-        output.push('    ' + colorName(reviewer, submitter, review.ship_it));
+        output.push('    ' + colorName(reviewer, submitter, review.ship_it) + ' ' + formatDate(date));
         needs_review = needsReview(reviewer, submitter, needs_review, date);
       }
       if (needs_review) {
@@ -75,7 +80,7 @@
   formatHeading = function(submitter, request) {
     var url;
     url = "" + config.url + "r/" + request.id + "/diff";
-    return ["" + (colorName(submitter, submitter)) + ": " + request.summary.yellow, "  " + url.underline + " " + (formatDate(request.last_updated))];
+    return ["" + (colorName(submitter, submitter)) + ": " + request.summary.yellow, "  " + url.underline + " " + (formatDate(request.time_added))];
   };
 
   formatDate = function(date) {
@@ -98,12 +103,12 @@
   };
 
   needsReview = function(reviewer, submitter, needs_review, date) {
-    var semi_month;
-    semi_month = new Date();
-    semi_month.setDate(semi_month.getDate() - 14);
+    var age;
+    age = new Date();
+    age.setDate(age.getDate() - config.daysOld);
     if (config.user === reviewer) {
       return false;
-    } else if (date < semi_month) {
+    } else if (date < age) {
       return false;
     } else if (reviewer === submitter) {
       return true;
