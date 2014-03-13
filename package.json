@@ -8,6 +8,7 @@
   "bin": "./rbwhat.js",
   "dependencies": {
     "node-rest-client": "",
+    "moment": "",
     "colors": ""
   }
 }
