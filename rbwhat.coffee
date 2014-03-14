@@ -24,11 +24,12 @@ loadConfigOrDefault = ->
     config = JSON.parse fs.readFileSync(config_path).toString()
     unless config.daysOld
       config.dasyOld = 14
-      console.log 'To turn off this message,
-                   \nplease add to the middle of ~/rbwhat.json this line
-                   \n    "daysOld": 14,
-                   \nThis will limit reviews to a certain age in days.
+      console.log 'Add this to the top of ~/.rbwhat.json
+                   \n  "daysOld": 14,
+                   \nYou can now limit reviews to a certain age in days.
                    \nDefaulting to 14 now...'
+    config.allowedAge = new Date()
+    config.allowedAge.setDate(config.allowedAge.getDate() - config.daysOld)
   else
     fs.writeFileSync config_path, JSON.stringify(config, null, 2)
 
@@ -45,17 +46,19 @@ printActiveRequest = (request)->
   submitter = request.links.submitter.title
 
   rbapi "api/review-requests/#{request.id}/reviews/", null, (res)->
-    needs_review = config.user isnt submitter # only review others'
+    # Boards started by you or boards that are too old, don't need review
+    #   unless responses to the board meet other criteria in needsReview()
+    needs_review = config.user isnt submitter and not tooOld request.time_added
+
     output = formatHeading(submitter, request) # begin output array with heading
 
     for review in res.reviews
-      date = new Date(review.timestamp)
+      date = review.timestamp
       reviewer = review.links.user.title
+      needs_review = needsReview(reviewer, submitter, needs_review, date)
 
       output.push '    ' + colorName(reviewer, submitter, review.ship_it) +
         ' ' + formatDate date
-
-      needs_review = needsReview(reviewer, submitter, needs_review, date)
 
     if needs_review then console.log output.join('\n')
 
@@ -68,6 +71,7 @@ formatHeading = (submitter, request)->
   ]
 
 formatDate = (date)-> moment(new Date(date)).fromNow().cyan
+tooOld = (date)-> new Date(date) < config.allowedAge
 
 # Rules for coloring a reviewer's name
 colorName = (name, submitter, shipit)->
@@ -80,13 +84,10 @@ colorName = (name, submitter, shipit)->
 # Rules for marking a review board as needing attention
 #   called on each review chronologically
 needsReview = (reviewer, submitter, needs_review, date)->
-  age = new Date()
-  age.setDate(age.getDate() - config.daysOld)
-
   # if you were last to review then done! (code update / comment / shipit)
   if config.user is reviewer then false
   # if the review is ancient (default 14 days ago) then done!
-  else if date < age then false
+  else if tooOld date then false
   # code updates are reviews that need your attention
   else if reviewer is submitter then true
   # if someone reviewed your fresh code, check it out
