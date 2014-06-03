@@ -1,13 +1,13 @@
 #!/usr/bin/env coffee
 require 'colors' # adds color methods on strings
 moment = require 'moment'
+extend = require 'extend'
 querystringify = (require 'querystring').stringify # hash to http query
 client = new (require 'node-rest-client').Client()
 fs = require 'fs'
 
 configPath = process.env.HOME + '/.rbwhat.json'
-config = {}
-configDefaults = # All valid config keys with example values
+config = # All valid config keys with example values
   user: 'test'
   url: 'https://reviewboard.twitter.biz/'
   daysOld: 14
@@ -92,17 +92,19 @@ rbapiReviews = (id, cb)->
 syncConfig = ->
   loadExistingConfig() if fs.existsSync(configPath)
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2))
+  loadOptions()
   if config.user is 'test' then console.log 'Set options in ~/.rbwhat.json'
 
 loadExistingConfig = ->
-  config = JSON.parse fs.readFileSync(configPath).toString()
-  mergeUnsetKeys(config, configDefaults)
-  if config.group? # deprecated config key
+  configFile = JSON.parse fs.readFileSync(configPath).toString()
+  extend(true, config, configFile)
+  if config.group? # deprecated config key: group
     config.filter['to-groups'] = config.group
     delete config.group
 
-mergeUnsetKeys = (child, template)->
-  child.__proto__ = template
-  child[key] = child[key] for key in Object.keys(template)
+# Load the first argument as a top priority JSON config
+loadOptions = ->
+  if firstCliArgument = process.argv[2]
+    extend(true, config, JSON.parse firstCliArgument)
 
 main()
