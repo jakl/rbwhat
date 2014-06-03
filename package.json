@@ -1,11 +1,18 @@
 {
   "name": "rbwhat",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Quickly list review requests you need to respond to",
   "license": "MIT",
   "author": "@jakl",
   "preferGlobal": true,
   "bin": "./rbwhat.js",
+  "homepage": "https://github.com/jakl/rbwhat",
+  "bugs": "https://github.com/jakl/rbwhat/issues",
+  "keywords": [ "review board", "code review"],
+  "repository": {
+      "type": "git",
+      "url": "http://github.com/jakl/rbwhat.git"
+  },
   "dependencies": {
     "node-rest-client": "",
     "moment": "",
