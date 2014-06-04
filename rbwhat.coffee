@@ -60,6 +60,7 @@ needsReview = (reviewer, submitter, show, date)->
 formatHeading = (submitter, request)->
   title  = request.summary.bold
   repo   = (request.links.repository?.title or 'No Repo')
+  repo   = pad(repo, 25)
   bug    = request.bugs_closed[0]
   bug    = if bug then config.bugPrefix + bug else 'None'
   bug    = 'bug '.grey + pad(bug, 22).white

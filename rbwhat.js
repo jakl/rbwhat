@@ -76,6 +76,7 @@
     var branch, bug, repo, title, url, _ref;
     title = request.summary.bold;
     repo = ((_ref = request.links.repository) != null ? _ref.title : void 0) || 'No Repo';
+    repo = pad(repo, 25);
     bug = request.bugs_closed[0];
     bug = bug ? config.bugPrefix + bug : 'None';
     bug = 'bug '.grey + pad(bug, 22).white;
