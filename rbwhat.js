@@ -22,6 +22,7 @@
   config = {
     url: 'https://reviewboard.twitter.biz/',
     daysOld: 14,
+    linkDiff: true,
     filter: {
       status: 'pending',
       'to-groups': 'intl-eng-test',
@@ -76,7 +77,10 @@
     repo = ((_ref = request.links.repository) != null ? _ref.title : void 0) || 'No Repo';
     bug = 'bug '.grey + pad(request.bugs_closed[0] || 'None', 15).white;
     branch = 'branch '.grey + (request.branch || 'None').white;
-    url = ("" + config.url + "r/" + request.id + "/diff").underline;
+    url = ("" + config.url + "r/" + request.id + "/").underline;
+    if (config.linkDiff) {
+      url += 'diff'.underline;
+    }
     return ["" + (pad(colorName(submitter, submitter), 18)) + " " + repo.white + " " + title, "  " + bug + branch, "  " + url + " " + (formatDate(request.time_added))];
   };
 

@@ -11,6 +11,7 @@ configPath = process.env.HOME + '/.rbwhat.json'
 config = # All valid config keys with example values
   url: 'https://reviewboard.twitter.biz/'
   daysOld: 14
+  linkDiff: true
   filter:
     status: 'pending'
     'to-groups': 'intl-eng-test'
@@ -60,7 +61,8 @@ formatHeading = (submitter, request)->
   repo   = (request.links.repository?.title or 'No Repo')
   bug    = 'bug '.grey + pad(request.bugs_closed[0] or 'None', 15).white
   branch = 'branch '.grey + (request.branch or 'None').white
-  url    = "#{config.url}r/#{request.id}/diff".underline
+  url    = "#{config.url}r/#{request.id}/".underline
+  url   += 'diff'.underline if config.linkDiff
   [
     "#{pad colorName(submitter, submitter), 18} #{repo.white} #{title}"
     "  #{bug}#{branch}"

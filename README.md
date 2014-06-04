@@ -52,8 +52,11 @@ Pass a JSON argument for temporary config overrides:
 * View reviews across all groups
   * `rbwhat '{"filter": {"to-groups": []}}'`
   * The empty array [] is a special wildcard
+* Link to review summary, not diff
+  * `rbwhat '{"linkDiff": false}'`
 * See which reviews your coworker is ignoring
-  * `rbwhat '{"filter": {"to-user-groups": "coworker"}}`
+  * `rbwhat '{"filter": {"to-user-groups": "coworkerName"}}`
+  * Show all incoming reviews for your coworker, instead of yourself
 * View all possible [filters here](http://www.reviewboard.org/docs/manual/dev/webapi/2.0/resources/review-request-list/).
 
 # Contributing
