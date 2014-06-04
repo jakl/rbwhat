@@ -17,8 +17,6 @@
 
   fs = require('fs');
 
-  user = 'test';
-
   configPath = process.env.HOME + '/.rbwhat.json';
 
   config = {
@@ -27,9 +25,11 @@
     filter: {
       status: 'pending',
       'to-groups': 'intl-eng-test',
-      'to-user-groups': user
+      'to-user-groups': 'test'
     }
   };
+
+  user = config.filter['to-user-groups'];
 
   main = function() {
     syncConfig();

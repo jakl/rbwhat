@@ -7,7 +7,6 @@ querystringify = (require 'querystring').stringify # hash to http query
 client = new (require 'node-rest-client').Client()
 fs = require 'fs'
 
-user = 'test' # same as config.filter['to-user-groups'] but easier to type
 configPath = process.env.HOME + '/.rbwhat.json'
 config = # All valid config keys with example values
   url: 'https://reviewboard.twitter.biz/'
@@ -15,7 +14,8 @@ config = # All valid config keys with example values
   filter:
     status: 'pending'
     'to-groups': 'intl-eng-test'
-    'to-user-groups': user
+    'to-user-groups': 'test'
+user = config.filter['to-user-groups'] # easy to type alias
 
 # Peruse review requests, printing active ones
 main = ->
@@ -38,7 +38,7 @@ printActiveRequest = (request)->
         pad(colorName(reviewer, submitter, review.ship_it), 22) +
         formatDate(date)
 
-    if show then console.log output.join('\n')
+    console.log output.join('\n') if show
 
 # Rules for marking a review board as needing attention
 #   called on each review chronologically
@@ -54,7 +54,7 @@ needsReview = (reviewer, submitter, show, date)->
   # if someone else gives a review, ignore it until there's a response
   else show
 
-# Request's: submitter, name, and url heading, as an array of lines for output
+# Request's submitter, name, and url, as an array of lines for output heading
 formatHeading = (submitter, request)->
   title  = request.summary.bold
   repo   = (request.links.repository?.title or 'No Repo')

@@ -1,7 +1,7 @@
 {
   "name": "rbwhat",
-  "version": "1.1.0",
-  "description": "Quickly list review requests you need to respond to",
+  "version": "1.1.1",
+  "description": "Quickly list review-board requests that need your attention",
   "license": "MIT",
   "author": "@jakl",
   "preferGlobal": true,
