@@ -1,6 +1,6 @@
 {
   "name": "rbwhat",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "Quickly list review requests you need to respond to",
   "license": "MIT",
   "author": "@jakl",
@@ -17,6 +17,7 @@
     "node-rest-client": "",
     "moment": "",
     "extend": "",
+    "pad": "",
     "colors": ""
   }
 }
