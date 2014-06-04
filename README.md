@@ -54,6 +54,9 @@ Pass a JSON argument for temporary config overrides:
   * The empty array [] is a special wildcard
 * Link to review summary, not diff
   * `rbwhat '{"linkDiff": false}'`
+* Make the bug a clickable link
+  * `rbwhat '{"bugPrefix": "url.prefix/for/bug/"}'`
+  * No prefix: `rbwhat '{"bugPrefix": ""}'`
 * See which reviews your coworker is ignoring
   * `rbwhat '{"filter": {"to-user-groups": "coworkerName"}}`
   * Show all incoming reviews for your coworker, instead of yourself

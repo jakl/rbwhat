@@ -12,6 +12,7 @@ config = # All valid config keys with example values
   url: 'https://reviewboard.twitter.biz/'
   daysOld: 14
   linkDiff: true
+  bugPrefix: 'go/jira/'
   filter:
     status: 'pending'
     'to-groups': 'intl-eng-test'
@@ -59,7 +60,9 @@ needsReview = (reviewer, submitter, show, date)->
 formatHeading = (submitter, request)->
   title  = request.summary.bold
   repo   = (request.links.repository?.title or 'No Repo')
-  bug    = 'bug '.grey + pad(request.bugs_closed[0] or 'None', 15).white
+  bug    = request.bugs_closed[0]
+  bug    = if bug then config.bugPrefix + bug else 'None'
+  bug    = 'bug '.grey + pad(bug, 22).white
   branch = 'branch '.grey + (request.branch or 'None').white
   url    = "#{config.url}r/#{request.id}/".underline
   url   += 'diff'.underline if config.linkDiff
