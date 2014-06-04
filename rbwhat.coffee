@@ -28,19 +28,25 @@ main = ->
 printActiveRequest = (request)->
   submitter = request.links.submitter.title
 
-  rbapiReviews request.id, (reviews)->
-    # Boards started by you or boards that are too old, don't need review
-    show = user isnt submitter and not tooOld request.time_added
-    output = formatHeading(submitter, request) # seed output lines with heading
-    for review in reviews
-      date = review.timestamp
-      reviewer = review.links.user.title
-      show = needsReview(reviewer, submitter, show, date) # should we review?
-      output.push '    ' +
-        pad(colorName(reviewer, submitter, review.ship_it), 22) +
-        formatDate(date)
+  rbapiDiffs request.id, submitter, (diffs)->
+    rbapiReviews request.id, (reviews)->
+      # Merge-sort diffs and reviews by their age and output as activity list
+      outputReviewActivity submitter, request, reviews.concat(diffs).sort byAge
 
-    console.log output.join('\n') if show
+byAge = (a, b)-> new Date(a.timestamp) - new Date(b.timestamp)
+
+outputReviewActivity = (submitter, request, reviews)->
+  output = formatHeading(submitter, request) # seed output with heading
+  # Review requests started by a coworker initially need your attention
+  show = user isnt submitter
+  for review in reviews
+    date = review.timestamp
+    reviewer = review.links.user.title
+    show = needsReview(reviewer, submitter, show, date) # should we review?
+    output.push '    ' +
+      pad(colorName(reviewer, submitter, review.ship_it), 22) +
+      formatDate(date)
+  console.log output.join('\n') if show
 
 # Rules for marking a review board as needing attention
 #   called on each review chronologically
@@ -70,7 +76,7 @@ formatHeading = (submitter, request)->
   [
     "#{pad colorName(submitter, submitter), 25} #{title}"
     "#{repo}  #{bug}  #{branch}"
-    "  #{url} #{formatDate request.time_added}"
+    "  #{url}"
   ]
 
 # Date colouring and ageing  <- So British!
@@ -92,9 +98,10 @@ colorName = (name, submitter, shipit)->
 # Calls rb api with a hash of query params. Returns response as hash
 rbapi = (path, args, cb)->
   query = '?' + querystringify args
-  console.log "curl '#{config.url + path + query}' | jsonpp" if config.debug
-  client.get config.url + path + query, (res)->
-    cb JSON.parse(res)
+  url = config.url + path + query
+  if config.debug
+    console.log "curl '#{url}' | jsonpp | vim -c 'setf javascript' -"
+  client.get url, (res)-> cb JSON.parse(res)
 
 # Get all the review-requests, given a filter
 rbapiReviewRequests = (filter, cb)->
@@ -104,6 +111,14 @@ rbapiReviewRequests = (filter, cb)->
 # Get all the reviews for a request
 rbapiReviews = (id, cb)->
   rbapi "api/review-requests/#{id}/reviews/", null, (res)-> cb(res.reviews)
+
+# In a request, find all the "Review request changed" entries
+rbapiDiffs = (id, submitter, cb)->
+  rbapi "api/review-requests/#{id}/diffs/", null,
+    (res)-> cb res.diffs.map (diff)-> # use the same data model as a review
+      ship_it: false
+      timestamp: diff.timestamp
+      links: user: title: submitter
 
 # Load config in this priority: bash arg, ~/.rbwhat.json, defaults
 syncConfig = ->
