@@ -74,18 +74,18 @@
 
   formatHeading = function(submitter, request) {
     var branch, bug, repo, title, url, _ref;
+    repo = pad(((_ref = request.links.repository) != null ? _ref.title : void 0) || 'No Repo', 25).white;
+    repo = 'repo '.grey + repo;
     title = request.summary.bold;
-    repo = ((_ref = request.links.repository) != null ? _ref.title : void 0) || 'No Repo';
-    repo = pad(repo, 25);
     bug = request.bugs_closed[0];
     bug = bug ? config.bugPrefix + bug : 'None';
-    bug = 'bug '.grey + pad(bug, 22).white;
+    bug = 'bug '.grey + pad(bug, 24).white;
     branch = 'branch '.grey + (request.branch || 'None').white;
     url = ("" + config.url + "r/" + request.id + "/").underline;
     if (config.linkDiff) {
       url += 'diff'.underline;
     }
-    return ["" + (pad(colorName(submitter, submitter), 18)) + " " + repo.white + " " + title, "  " + bug + branch, "  " + url + " " + (formatDate(request.time_added))];
+    return ["" + (pad(colorName(submitter, submitter), 25)) + " " + title, "" + repo + "  " + bug + "  " + branch, "  " + url + " " + (formatDate(request.time_added))];
   };
 
   formatDate = function(date) {

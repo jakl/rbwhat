@@ -58,18 +58,18 @@ needsReview = (reviewer, submitter, show, date)->
 
 # Request's submitter, name, and url, as an array of lines for output heading
 formatHeading = (submitter, request)->
+  repo   = pad(request.links.repository?.title or 'No Repo', 25).white
+  repo   = 'repo '.grey + repo
   title  = request.summary.bold
-  repo   = (request.links.repository?.title or 'No Repo')
-  repo   = pad(repo, 25)
   bug    = request.bugs_closed[0]
   bug    = if bug then config.bugPrefix + bug else 'None'
-  bug    = 'bug '.grey + pad(bug, 22).white
+  bug    = 'bug '.grey + pad(bug, 24).white
   branch = 'branch '.grey + (request.branch or 'None').white
   url    = "#{config.url}r/#{request.id}/".underline
   url   += 'diff'.underline if config.linkDiff
   [
-    "#{pad colorName(submitter, submitter), 18} #{repo.white} #{title}"
-    "  #{bug}#{branch}"
+    "#{pad colorName(submitter, submitter), 25} #{title}"
+    "#{repo}  #{bug}  #{branch}"
     "  #{url} #{formatDate request.time_added}"
   ]
 

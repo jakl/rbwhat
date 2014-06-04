@@ -9,9 +9,9 @@ Quickly list review-board requests that need your attention
 
 # Output
 ## Structure and Colors
-* Developer's name in blue for yourself - purple for others
-* Repository in white
+* Developer's name in purple, but blue for yourself
 * Review title in bold
+* Repository in white
 * Jira ticket or bug identifier in white
 * Branch in white
 * Code review URL underlined (clickable in [iTerm2](http://iterm2.com))
@@ -33,16 +33,17 @@ Quickly list review-board requests that need your attention
 ## Example
 ```
 rbwhat
-userName  repoName reviewTitle
-  bug TEAM-4242     branch make_my_feature_win
+userName  reviewTitle
+repo repoName       bug TEAM-4242     branch make_my_feature_win
   https://reviewboard.pwn/r/4242/diff 5 days ago
     reviewer        5 days ago
     reviewer        4 days ago
     reviewer        7 hours ago
-bill  cool-project I'm trying to make it win
-  bug TEAM-424242   branch best_feature_ever
+bill  I will make it win
+repo cool-project   bug TEAM-424242   branch best_feature_ever
   https://reviewboard.pwn/r/424242/diff a day ago
     bob             42 minutes ago
+    bert            a minute ago
 ```
 
 ## Power Usage
