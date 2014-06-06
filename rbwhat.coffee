@@ -74,7 +74,7 @@ formatHeading = (submitter, request)->
   url    = "#{config.url}r/#{request.id}/".underline
   url   += 'diff'.underline if config.linkDiff
   [
-    "#{pad colorName(submitter, submitter), 25} #{title}"
+    title
     "  #{bug} #{repo} #{'/'.grey} #{branch}"
     "  #{url}"
   ]

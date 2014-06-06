@@ -97,7 +97,7 @@
     if (config.linkDiff) {
       url += 'diff'.underline;
     }
-    return ["" + (pad(colorName(submitter, submitter), 25)) + " " + title, "  " + bug + " " + repo + " " + '/'.grey + " " + branch, "  " + url];
+    return [title, "  " + bug + " " + repo + " " + '/'.grey + " " + branch, "  " + url];
   };
 
   formatDate = function(date) {
