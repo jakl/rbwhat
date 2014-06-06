@@ -2,10 +2,10 @@
 require 'colors' # adds color methods on strings
 moment = require 'moment'
 extend = require 'extend'
-pad = require 'pad'
+pad    = require 'pad'
+fs     = require 'fs'
 querystringify = (require 'querystring').stringify # hash to http query
-client = new (require 'node-rest-client').Client()
-fs = require 'fs'
+client = new (require 'node-rest-client').Client user: process.env.USER
 
 configPath = process.env.HOME + '/.rbwhat.json'
 config = # All valid config keys with example values
@@ -46,7 +46,7 @@ outputReviewActivity = (submitter, request, reviews)->
     output.push '    ' +
       pad(colorName(reviewer, submitter, review.ship_it), 22) +
       formatDate(date)
-  console.log output.join('\n') if show
+  console.log output.join('\n') + '\n' if show
 
 # Rules for marking a review board as needing attention
 #   called on each review chronologically
@@ -64,18 +64,18 @@ needsReview = (reviewer, submitter, show, date)->
 
 # Request's submitter, name, and url, as an array of lines for output heading
 formatHeading = (submitter, request)->
-  repo   = pad(request.links.repository?.title or 'No Repo', 25).white
-  repo   = 'repo '.grey + repo
+  repo   = 'git '.grey
+  repo  += (request.links.repository?.title or 'No Repo').white
+  branch = (request.branch or 'No Branch').white
   title  = request.summary.bold
   bug    = request.bugs_closed[0]
   bug    = if bug then config.bugPrefix + bug else 'None'
   bug    = 'bug '.grey + pad(bug, 24).white
-  branch = 'branch '.grey + (request.branch or 'None').white
   url    = "#{config.url}r/#{request.id}/".underline
   url   += 'diff'.underline if config.linkDiff
   [
     "#{pad colorName(submitter, submitter), 25} #{title}"
-    "#{repo}  #{bug}  #{branch}"
+    "  #{bug} #{repo} #{'/'.grey} #{branch}"
     "  #{url}"
   ]
 
