@@ -9,18 +9,15 @@ Quickly list review-board requests that need your attention
 
 # Output
 ## Structure and Colors
-* Developer's name in purple, but blue for yourself
 * Review title in bold
-* Repository in white
-* Jira ticket or bug identifier in white
-* Branch in white
+* Jira ticket / bug id in white
+* Repo / Branch in white
 * Code review URL underlined (clickable in [iTerm2](http://iterm2.com))
-* Age of review in blue
-* Chronological activity list
+* Chronological activity list, begins with initial code submission
   * Green for shipit
   * Red for *DO NOT* shipit
   * Blue for yourself
-  * Purple for the original developer
+  * Purple for the original submitter
 
 ## Reviews only show if...
 * Someone posted a review
@@ -33,15 +30,18 @@ Quickly list review-board requests that need your attention
 ## Example
 ```
 rbwhat
-userName  reviewTitle
-repo repoName       bug TEAM-4242     branch make_my_feature_win
+
+reviewTitle
+  bug TEAM-4242     git repoName / make_my_feature_win
   https://reviewboard.pwn/r/4242/diff 5 days ago
-    reviewer        5 days ago
+    submitter       5 days ago
     reviewer        4 days ago
     reviewer        7 hours ago
-bill  I will make it win
-repo cool-project   bug TEAM-424242   branch best_feature_ever
+
+I will make it win
+  bug TEAM-424242   git coolProject / best_feature_ever
   https://reviewboard.pwn/r/424242/diff a day ago
+    bill            an hour ago
     bob             42 minutes ago
     bert            a minute ago
 ```
