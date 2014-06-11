@@ -15,7 +15,7 @@ config = # All valid config keys with example values
   bugPrefix: 'go/jira/'
   filter:
     status: 'pending'
-    'to-groups': 'intl-eng-test'
+    'to-groups': 'example-group'
     'to-user-groups': process.env.USER
 user = config.filter['to-user-groups'] # easy to type alias
 
@@ -125,7 +125,8 @@ syncConfig = ->
   loadExistingConfig() if fs.existsSync(configPath)
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2))
   loadOptions()
-  if user is 'test' then console.log 'Set options in ~/.rbwhat.json'
+  if config.filter['to-groups'] is 'example-group'
+    console.log 'Set options in ~/.rbwhat.json'
 
 # Load values from ~/.rbwhat.json
 loadExistingConfig = ->

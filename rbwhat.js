@@ -28,7 +28,7 @@
     bugPrefix: 'go/jira/',
     filter: {
       status: 'pending',
-      'to-groups': 'intl-eng-test',
+      'to-groups': 'example-group',
       'to-user-groups': process.env.USER
     }
   };
@@ -176,7 +176,7 @@
     }
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
     loadOptions();
-    if (user === 'test') {
+    if (config.filter['to-groups'] === 'example-group') {
       return console.log('Set options in ~/.rbwhat.json');
     }
   };
