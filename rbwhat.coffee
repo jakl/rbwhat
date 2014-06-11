@@ -16,7 +16,7 @@ config = # All valid config keys with example values
   filter:
     status: 'pending'
     'to-groups': 'intl-eng-test'
-    'to-user-groups': 'test'
+    'to-user-groups': process.env.USER
 user = config.filter['to-user-groups'] # easy to type alias
 
 # Peruse review requests, printing active ones

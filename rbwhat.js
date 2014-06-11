@@ -29,7 +29,7 @@
     filter: {
       status: 'pending',
       'to-groups': 'intl-eng-test',
-      'to-user-groups': 'test'
+      'to-user-groups': process.env.USER
     }
   };
 
