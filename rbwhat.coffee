@@ -12,7 +12,8 @@ config = # All valid config keys with example values
   url: 'https://reviewboard.twitter.biz/'
   daysOld: 14
   linkDiff: true
-  bugPrefix: 'go/jira/'
+  bugUrl: 'go/jira/'
+  gitUrl: 'cgit.twitter.biz/'
   filter:
     status: 'pending'
     'to-groups': 'example-group'
@@ -64,18 +65,18 @@ needsReview = (reviewer, submitter, show, date)->
 
 # Request's submitter, name, and url, as an array of lines for output heading
 formatHeading = (submitter, request)->
-  repo   = 'git '.grey
-  repo  += (request.links.repository?.title or 'No Repo').white
+  repo   = request.links.repository?.title
+  repo   = if repo then config.gitUrl.grey + repo.white else 'No Repo'.white
   branch = (request.branch or 'No Branch').white
   title  = request.summary.bold
   bug    = request.bugs_closed[0]
-  bug    = if bug then config.bugPrefix + bug else 'None'
+  bug    = if bug then config.bugUrl + bug else 'None'
   bug    = 'bug '.grey + pad(bug, 24).white
   url    = "#{config.url}r/#{request.id}/".underline
   url   += 'diff'.underline if config.linkDiff
   [
     title
-    "  #{bug} #{repo} #{'/'.grey} #{branch}"
+    "  #{bug} #{repo} #{'branch'.grey} #{branch}"
     "  #{url}"
   ]
 
@@ -132,17 +133,19 @@ syncConfig = ->
 loadExistingConfig = ->
   configFile = JSON.parse fs.readFileSync(configPath).toString()
   extend(true, config, configFile)
-  deprecateKey('user', 'to-user-groups')
-  deprecateKey('group', 'to-groups')
+  deprecateKey('user', 'to-user-groups', true)
+  deprecateKey('group', 'to-groups', true)
+  deprecateKey('bugPrefix', 'bugUrl')
   user = config.filter['to-user-groups'] # user variable that's easier to type
 
 # delete the old key and stash its value into the new key
-deprecateKey = (old, fresh)->
+deprecateKey = (old, fresh, isFilter)->
   if config[old]?
-    config.filter[fresh] = config[old]
+    newConfig = if isFilter then config.filter else config
+    newConfig[fresh] = config[old]
     delete config[old]
 
-# Load the first argument as a top priority JSON config
+# Treat the first argument as JSON overrides for ~/.rbwhat.json
 loadOptions = ->
   if firstCliArgument = process.argv[2]
     extend(true, config, JSON.parse firstCliArgument)

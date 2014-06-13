@@ -25,7 +25,8 @@
     url: 'https://reviewboard.twitter.biz/',
     daysOld: 14,
     linkDiff: true,
-    bugPrefix: 'go/jira/',
+    bugUrl: 'go/jira/',
+    gitUrl: 'cgit.twitter.biz/',
     filter: {
       status: 'pending',
       'to-groups': 'example-group',
@@ -86,18 +87,18 @@
 
   formatHeading = function(submitter, request) {
     var branch, bug, repo, title, url, _ref;
-    repo = 'git '.grey;
-    repo += (((_ref = request.links.repository) != null ? _ref.title : void 0) || 'No Repo').white;
+    repo = (_ref = request.links.repository) != null ? _ref.title : void 0;
+    repo = repo ? config.gitUrl.grey + repo.white : 'No Repo'.white;
     branch = (request.branch || 'No Branch').white;
     title = request.summary.bold;
     bug = request.bugs_closed[0];
-    bug = bug ? config.bugPrefix + bug : 'None';
+    bug = bug ? config.bugUrl + bug : 'None';
     bug = 'bug '.grey + pad(bug, 24).white;
     url = ("" + config.url + "r/" + request.id + "/").underline;
     if (config.linkDiff) {
       url += 'diff'.underline;
     }
-    return [title, "  " + bug + " " + repo + " " + '/'.grey + " " + branch, "  " + url];
+    return [title, "  " + bug + " " + repo + " " + 'branch'.grey + " " + branch, "  " + url];
   };
 
   formatDate = function(date) {
@@ -185,14 +186,17 @@
     var configFile;
     configFile = JSON.parse(fs.readFileSync(configPath).toString());
     extend(true, config, configFile);
-    deprecateKey('user', 'to-user-groups');
-    deprecateKey('group', 'to-groups');
+    deprecateKey('user', 'to-user-groups', true);
+    deprecateKey('group', 'to-groups', true);
+    deprecateKey('bugPrefix', 'bugUrl');
     return user = config.filter['to-user-groups'];
   };
 
-  deprecateKey = function(old, fresh) {
+  deprecateKey = function(old, fresh, isFilter) {
+    var newConfig;
     if (config[old] != null) {
-      config.filter[fresh] = config[old];
+      newConfig = isFilter ? config.filter : config;
+      newConfig[fresh] = config[old];
       return delete config[old];
     }
   };
