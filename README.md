@@ -7,8 +7,12 @@ Quickly list review-board requests that need your attention
 * Run once to generate the default config : `rbwhat`
 * Edit your config in `~/.rbwhat.json`
 
+# Reviews only show if...
+* Someone posted a review, and you haven't reviewed their latest update
+* You posted a review, and someone responded since your last change
+* Old reviews are hidden, default 14 days old, configurable in ~/.rbwhat.json
+
 # Output
-## Structure and Colors
 * Review title in bold
 * Jira ticket / bug id in white (linkified, clickable in [iTerm](http://iterm2.com))
 * Repo / Branch in white (linkified)
@@ -19,12 +23,6 @@ Quickly list review-board requests that need your attention
   * Blue for yourself
   * Purple for the original submitter
 
-## Reviews only show if...
-* Someone posted a review, and you haven't reviewed their latest update
-* You posted a review, and someone responded since your last change
-* Old reviews are hidden, default 14 days old, configurable in ~/.rbwhat.json
-
-## Example
 ```
 rbwhat
 
@@ -60,8 +58,8 @@ Pass a JSON argument for temporary config overrides:
 * See which reviews your coworker is ignoring
   * `rbwhat '{"filter": {"to-user-groups": "coworkerName"}}`
   * Show all incoming reviews for your coworker, instead of yourself
-* View all possible [filters here](http://www.reviewboard.org/docs/manual/dev/webapi/2.0/resources/review-request-list/).
-* See ~/.rbwhat.json for all config options
+* View all possible [jira api filters here](http://www.reviewboard.org/docs/manual/dev/webapi/2.0/resources/review-request-list/).
+* See ~/.rbwhat.json for all config options.
 
 # Contributing
 Please and thank you for pull requests.
