@@ -71,13 +71,12 @@ formatHeading = (submitter, request)->
   branch = (request.branch or 'No Branch').white
   title  = request.summary.bold
   bug    = request.bugs_closed[0]
-  bug    = if bug then config.bugUrl + bug else 'None'
-  bug    = 'bug '.grey + pad(bug, 24).white
+  bug    = if bug then config.bugUrl.grey + bug.white else 'None'.white
   url    = "#{config.url}r/#{request.id}/".underline
   url   += 'diff'.underline if config.linkDiff
   [
     title
-    "  #{bug}"
+    "  #{pad bug, 24}"
     "  #{repo}#{config.branchWedge.grey}#{branch}"
     "  #{url}"
   ]

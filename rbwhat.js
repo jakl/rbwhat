@@ -93,13 +93,12 @@
     branch = (request.branch || 'No Branch').white;
     title = request.summary.bold;
     bug = request.bugs_closed[0];
-    bug = bug ? config.bugUrl + bug : 'None';
-    bug = 'bug '.grey + pad(bug, 24).white;
+    bug = bug ? config.bugUrl.grey + bug.white : 'None'.white;
     url = ("" + config.url + "r/" + request.id + "/").underline;
     if (config.linkDiff) {
       url += 'diff'.underline;
     }
-    return [title, "  " + bug, "  " + repo + config.branchWedge.grey + branch, "  " + url];
+    return [title, "  " + (pad(bug, 24)), "  " + repo + config.branchWedge.grey + branch, "  " + url];
   };
 
   formatDate = function(date) {
