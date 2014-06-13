@@ -27,6 +27,7 @@
     linkDiff: true,
     bugUrl: 'go/jira/',
     gitUrl: 'cgit.twitter.biz/',
+    branchWedge: '/log/?h=',
     filter: {
       status: 'pending',
       'to-groups': 'example-group',
@@ -98,7 +99,7 @@
     if (config.linkDiff) {
       url += 'diff'.underline;
     }
-    return [title, "  " + bug + " " + repo + " " + 'branch'.grey + " " + branch, "  " + url];
+    return [title, "  " + bug, "  " + repo + config.branchWedge.grey + branch, "  " + url];
   };
 
   formatDate = function(date) {

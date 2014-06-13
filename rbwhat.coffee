@@ -14,6 +14,7 @@ config = # All valid config keys with example values
   linkDiff: true
   bugUrl: 'go/jira/'
   gitUrl: 'cgit.twitter.biz/'
+  branchWedge: '/log/?h='
   filter:
     status: 'pending'
     'to-groups': 'example-group'
@@ -76,7 +77,8 @@ formatHeading = (submitter, request)->
   url   += 'diff'.underline if config.linkDiff
   [
     title
-    "  #{bug} #{repo} #{'branch'.grey} #{branch}"
+    "  #{bug}"
+    "  #{repo}#{config.branchWedge.grey}#{branch}"
     "  #{url}"
   ]
 
