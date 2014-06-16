@@ -66,20 +66,28 @@ needsReview = (reviewer, submitter, show, date)->
 
 # Request's submitter, name, and url, as an array of lines for output heading
 formatHeading = (submitter, request)->
-  repo   = request.links.repository?.title
-  repo   = if repo then config.gitUrl.grey + repo.white else 'No Repo'.white
-  branch = (request.branch or 'No Branch').white
-  title  = request.summary.bold
-  bug    = request.bugs_closed[0]
-  bug    = if bug then config.bugUrl.grey + bug.white else 'None'.white
-  url    = "#{config.url}r/#{request.id}/".underline
-  url   += 'diff'.underline if config.linkDiff
-  [
-    title
-    "  #{pad bug, 24}"
-    "  #{repo}#{config.branchWedge.grey}#{branch}"
-    "  #{url}"
-  ]
+  heading = [request.summary.bold]
+  bug = request.bugs_closed[0]
+  heading.push formatBug bug if bug
+  heading.push formatGit request.branch, request.links.repository?.title
+  heading.concat formatUrl request.id
+
+formatBug = (bug)->
+  "  #{pad(config.bugUrl.grey + bug.white, 24)}"
+
+formatGit = (branch, repo)->
+  urlColored = config.gitUrl.grey
+  branchColored = (branch or 'No Branch').white
+  repoColored = (repo or 'No Repo').white
+
+  if branch and repo
+    "  #{urlColored}#{repoColored}#{config.branchWedge.grey}#{branchColored}"
+  else
+    "  #{urlColored}#{repoColored}  #{branchColored}"
+
+formatUrl = (request_id)->
+  diff = if config.linkDiff then 'diff' else ''
+  '  ' + "#{config.url}r/#{request_id}/#{diff}".underline
 
 # Date colouring and ageing  <- So British!
 formatDate = (date)-> moment(new Date(date)).fromNow().cyan
