@@ -26,7 +26,7 @@
     daysOld: 14,
     linkDiff: true,
     bugUrl: 'go/jira/',
-    gitUrl: 'cgit.twitter.biz/',
+    gitUrl: 'go/repo/',
     branchWedge: '/log/?h=',
     filter: {
       status: 'pending',
