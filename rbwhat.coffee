@@ -15,6 +15,7 @@ config = # All valid config keys with example values
   bugUrl: 'go/jira/'
   gitUrl: 'go/repo/'
   branchWedge: '/log/?h='
+  ignore_repos: []
   filter:
     status: 'pending'
     'to-groups': 'example-group'
@@ -38,6 +39,7 @@ printActiveRequest = (request)->
 byAge = (a, b)-> new Date(a.timestamp) - new Date(b.timestamp)
 
 outputReviewActivity = (submitter, request, reviews)->
+  return if request.links.repository?.title in config.ignore_repos
   output = formatHeading(submitter, request) # seed output with heading
   # Review requests started by a coworker initially need your attention
   show = user isnt submitter
