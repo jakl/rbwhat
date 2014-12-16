@@ -17,7 +17,7 @@
     "url": "http://github.com/jakl/rbwhat.git"
   },
   "dependencies": {
-    "node-rest-client": "",
+    "node-rest-client": "1.4.1",
     "moment": "",
     "extend": "",
     "pad": "",
