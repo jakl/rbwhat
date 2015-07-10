@@ -59,6 +59,7 @@ Pass a JSON argument for temporary config overrides:
   * `rbwhat '{"filter": {"to-user-groups": "coworkerName"}}`
   * Show all incoming reviews for your coworker, instead of yourself
 * View all possible [jira api filters here](http://www.reviewboard.org/docs/manual/dev/webapi/2.0/resources/review-request-list/).
+* maxHistory limits the lines of history to show for each review, default of 4, which will show the first line and the last 3 lines.
 * See ~/.rbwhat.json for all config options.
 
 # Contributing

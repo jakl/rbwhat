@@ -16,6 +16,7 @@ config = # All valid config keys with example values
   gitUrl: 'go/repo/'
   branchWedge: '/log/?h='
   ignore_repos: []
+  maxHistory: 4
   filter:
     status: 'pending'
     'to-groups': 'example-group'
@@ -40,7 +41,7 @@ byAge = (a, b)-> new Date(a.timestamp) - new Date(b.timestamp)
 
 outputReviewActivity = (submitter, request, reviews)->
   return if request.links.repository?.title in config.ignore_repos
-  output = formatHeading(submitter, request) # seed output with heading
+  output = []
   # Review requests started by a coworker initially need your attention
   show = user isnt submitter
   for review in reviews
@@ -50,6 +51,10 @@ outputReviewActivity = (submitter, request, reviews)->
     output.push '    ' +
       pad(colorName(reviewer, submitter, review.ship_it), 22) +
       formatDate(date)
+  if output.length > config.maxHistory
+    firstOutput = [output[0]]
+    output = firstOutput.concat(output.slice(-(config.maxHistory - 1)))
+  output = formatHeading(submitter, request).concat(output) # prepend heading
   console.log output.join('\n') + '\n' if show
 
 # Rules for marking a review board as needing attention
